@@ -1,0 +1,81 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.sarxos</groupId>
+	<artifactId>spycam</artifactId>
+	<version>0.1</version>
+
+	<name>Spy Camera</name>
+	<description>Java Spy Camera</description>
+
+	<organization>
+		<name>Bartosz Firyn (SarXos)</name>
+		<url>https://github.com/sarxos</url>
+	</organization>
+
+	<scm>
+		<url>https://github.com/sarxos/spycam</url>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/sarxos/spycam/issues</url>
+	</issueManagement>
+
+	<distributionManagement>
+		<repository>
+			<id>sarxos-ftp-repo</id>
+			<url>ftp://ftp.sarxos.pl/maven2</url>
+		</repository>
+	</distributionManagement>
+
+<!-- 
+	<repositories>
+		<repository>
+			<id>sarxos-repo</id>
+			<url>http://www.sarxos.pl/repo/maven2</url>
+		</repository>
+	</repositories>
+ -->
+ 
+	<dependencies>
+		<dependency>
+			<groupId>com.sarxos</groupId>
+			<artifactId>webcam-capture</artifactId>
+			<version>0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-daemon</groupId>
+			<artifactId>commons-daemon</artifactId>
+			<version>1.0.10</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.4</version>
+		</dependency>
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		    <version>0.9.18</version>
+		</dependency>
+		<dependency> 
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-core</artifactId>
+			<version>5.6.0</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>1.0-beta-7</version>
+			</extension>
+		</extensions>
+	</build>
+
+
+</project>

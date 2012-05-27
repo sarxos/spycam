@@ -44,14 +44,17 @@ public class SpycamService implements Daemon, MessageListener {
 		LOG.info("Spy service ctor");
 	}
 
+	@Override
 	public void destroy() {
 		LOG.info("Spy service destroy");
 	}
 
+	@Override
 	public void init(DaemonContext ctx) throws DaemonInitException, Exception {
 		LOG.info("Spy service init");
 	}
 
+	@Override
 	public void start() throws Exception {
 		LOG.info("Spy service start");
 
@@ -66,9 +69,12 @@ public class SpycamService implements Daemon, MessageListener {
 		consumer.setMessageListener(this);
 
 		connection.start();
+
+		spy.setUploadURL("http://localhost/upload/");
 		spy.start();
 	}
 
+	@Override
 	public void stop() throws Exception {
 		LOG.info("Spy service stop");
 
@@ -86,10 +92,10 @@ public class SpycamService implements Daemon, MessageListener {
 
 		while (svc.spy.isRunning()) {
 			Thread.sleep(5000);
-			System.out.println("running");
 		}
 	}
 
+	@Override
 	public void onMessage(Message message) {
 		if (message instanceof ObjectMessage) {
 
@@ -110,10 +116,16 @@ public class SpycamService implements Daemon, MessageListener {
 						e.printStackTrace();
 					}
 					break;
+
+				// only one command for now, but i can add more in the future
+
+				default:
+					throw new RuntimeException("Unknown command");
 			}
 
 		} else {
 			throw new RuntimeException("Incorrect message " + message.getClass());
 		}
 	}
+
 }

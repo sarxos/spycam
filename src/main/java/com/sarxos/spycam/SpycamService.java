@@ -1,5 +1,7 @@
 package com.sarxos.spycam;
 
+import java.io.File;
+
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -26,6 +28,10 @@ import com.sarxos.spycam.jms.SpycamCommand;
  * @author Bartosz Firyn (SarXos)
  */
 public class SpycamService implements Daemon, MessageListener {
+
+	static {
+		new LogConfigurationUpdater(new File("logback.xml"));
+	}
 
 	private static final Logger LOG = LoggerFactory.getLogger(SpycamService.class);
 

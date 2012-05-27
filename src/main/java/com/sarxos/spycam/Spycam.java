@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
@@ -16,6 +17,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -85,15 +87,44 @@ public class Spycam implements Runnable, ThreadFactory {
 	}
 
 	public void tick() {
-		LOG.info("Spycam tick picture");
+
+		LOG.info("Spycam picture tick");
+
+		File storage = new File("storage");
+		if (!storage.exists()) {
+			storage.mkdirs();
+		}
+
+		File tmp = new File("storage/" + System.currentTimeMillis() + ".jpg");
+		if (!tmp.exists()) {
+			try {
+				tmp.createNewFile();
+			} catch (IOException e) {
+				LOG.error("Cannot create file " + tmp, e);
+				return;
+			}
+		}
+
+		BufferedImage image = webcam.getImage();
+
 		try {
-			File tmp = File.createTempFile("sct", null);
-			BufferedImage image = webcam.getImage();
 			ImageIO.write(image, "JPG", tmp);
+		} catch (IOException e1) {
+			LOG.error("Cannot write tick image to file " + tmp);
+			return;
+		}
+
+		try {
 			upload(tmp);
 			tmp.delete();
+		} catch (HttpHostConnectException e) {
+			LOG.error("HTTP connectivity issue. " + e.getMessage());
+			LOG.debug("Cannot connect to host", e);
+		} catch (SocketException e) {
+			LOG.error("Socket error. " + e.getMessage());
+			LOG.debug("Connectivity problem", e);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("Exception while uploading picture", e);
 		}
 	}
 
@@ -124,7 +155,7 @@ public class Spycam implements Runnable, ThreadFactory {
 
 	@Override
 	public Thread newThread(Runnable r) {
-		Thread t = new Thread(r, "spycam-thread");
+		Thread t = new Thread(r, "spycam");
 		t.setDaemon(true);
 		return t;
 	}

@@ -20,7 +20,7 @@ $dst_name = $file['name'];
 $tmp_name = $file['tmp_name'];
 
 
-if (!reg_match('/^[0-9]+\.jpg$/', $dst_name)) {
+if (!preg_match('/^[0-9]+\.jpg$/', $dst_name)) {
 	die('Missing picture');
 }
 

@@ -42,6 +42,7 @@ public class Spycam implements Runnable, ThreadFactory {
 	private static final Logger LOG = LoggerFactory.getLogger(Spycam.class);
 
 	private Webcam webcam = Webcam.getDefault();
+	private MotionDetector detector = new MotionDetector(webcam, 10, 10);
 
 	private boolean running = false;
 	private URL url = null;
@@ -64,6 +65,7 @@ public class Spycam implements Runnable, ThreadFactory {
 	public void start() {
 		LOG.debug("Spycam start");
 		webcam.open();
+		detector.start();
 		executor.submit(this);
 		running = true;
 	}
@@ -71,6 +73,7 @@ public class Spycam implements Runnable, ThreadFactory {
 	public void stop() {
 		LOG.debug("Spycam stop");
 		running = false;
+		detector.stop();
 		webcam.close();
 	}
 
@@ -89,6 +92,11 @@ public class Spycam implements Runnable, ThreadFactory {
 	public void tick() {
 
 		LOG.info("Spycam picture tick");
+
+		if (!detector.isMotion()) {
+			LOG.debug("No motion, no picture");
+			return;
+		}
 
 		File storage = new File("storage");
 		if (!storage.exists()) {
@@ -150,7 +158,7 @@ public class Spycam implements Runnable, ThreadFactory {
 		HttpResponse response = client.execute(post);
 		String picture = EntityUtils.toString(response.getEntity());
 
-		LOG.debug("Tick picture stored as " + picture);
+		LOG.debug("Tick picture stored " + picture);
 	}
 
 	@Override

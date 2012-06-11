@@ -1,3 +1,4 @@
 .settings
 target
 src/main/php/uploads/*.jpg
+tmp

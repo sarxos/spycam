@@ -101,7 +101,7 @@ public class MotionDetector implements ThreadFactory {
 	/**
 	 * Blur filter instance.
 	 */
-	private BlurFilter blur = new BlurFilter(3);
+	private BoxBlurFilter blur = new BoxBlurFilter(3, 3, 1);
 
 	/**
 	 * Grayscale filter instance.
